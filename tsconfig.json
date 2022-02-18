@@ -1,3 +1,4 @@
+// Derived from AU course "Advanced Backend" lecture 3 example
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
