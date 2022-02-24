@@ -4,14 +4,16 @@ import https from 'https';
 import helmet from 'helmet';
 import fs from 'fs';
 import path from 'path';
-import { RoomsRouter } from "./router/roomsRouter";
+import {roomsRouter} from "./router/roomsRouter"
+import {userRouter} from "./router/userRouter"
+
+
+//var RoomsRouter = require('./router/roomsRouter');
 
 const app = express()
 const port = 3001
 
-app.use(express.json());
-
-
+app.use(bodyParser.json());
 
 const options =  {
   key: fs.readFileSync(path.join(__dirname, '../selfsigned.key')),
@@ -25,10 +27,11 @@ app.get('/hello', (req: any, res: any) => {
 })
 
 
+
 //Rooms router 
-app.use("/users")
-app.use("/authentication")
-app.use("/rooms",)
+ app.use("", userRouter)
+// app.use("/authentication")
+app.use("/rooms",roomsRouter)
 
 https.createServer(options, app).listen(port, () => {
   console.log(`Running 'secure-http' on ${port}`);

@@ -3,9 +3,18 @@ import { sign, verify } from 'jsonwebtoken'
 import { Request, Response } from 'express'
 import { readFile } from 'fs'
 import { join } from 'path'
+import { compare, genSalt, hash } from 'bcrypt'
+
 
 import mongoose from 'mongoose'
 import { userSchema } from '../Models/User_Schema'
+
+/*Authentication
+- `GET /users`–list all user IDs
+- `GET /users/{:uid}`–view user data
+- `POST /user`–create user
+- `POST /login`–issue JWT token
+*/
 
 const PATH_PRIVATE_KEY = join(__dirname, '..', '..', 'auth-rsa256.key')
 const PATH_PUBLIC_KEY = join(__dirname, '..', '..', 'public', 'auth-rsa256.key.pub')
@@ -19,12 +28,13 @@ export const authenticate = async (req: Request, res: Response) => {
   const { email, password } = req.body
   let user = await UserModel.findOne({ email }).exec()
   if(user) {
-    if(await user.password.isPasswordValid(password)) {
+    if(await compare(password,user.password.hash)) {
       readFile(PATH_PRIVATE_KEY, (err, privateKey) => {
         if(err) {
           res.sendStatus(500)
         } else {
-          sign({ email, admin: true }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U} }, (err, token) => {
+          const isManager=user.role.includes('manager')
+          sign({ email, admin: isManager }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U} }, (err, token) => {
             if(err) {
               res.status(500).json({
                 message: err.message

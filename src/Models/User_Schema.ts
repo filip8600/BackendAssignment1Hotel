@@ -2,6 +2,8 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 import { DIGEST, ITERATIONS, KEY_LENGTH, pbkdf2 } from '../utils/auth-crypto'
+import { compare, genSalt, hash } from 'bcrypt'
+
 
 
 export interface User {
@@ -35,9 +37,9 @@ export interface User {
     salt: { type: String, required: true }
   })
   
-  PasswordSchema.methods.isPasswordValid = async function(password: string) {
-    const hash = await pbkdf2(password, this.salt, ITERATIONS, KEY_LENGTH, DIGEST)
-    return this.hash === hash.toString('hex')
+  PasswordSchema.methods.isPasswordValid = async function(password: string, hash1: string) {
+    return await compare(password, hash1)
+   // return this.hash === hash.toString('hex')
   }
   
   PasswordSchema.methods.setPassword = function(hash: string, salt: string) {

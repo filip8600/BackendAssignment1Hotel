@@ -1,16 +1,43 @@
-// Derived from AU course "Advanced Backend" lecture 3 example
+const express = require('express')
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
-import { compare, genSalt, hash } from 'bcrypt'
-
-import { randomBytes, pbkdf2, SALT_LENGTH, DIGEST, ITERATIONS, KEY_LENGTH, ROUNDS } from '../utils/auth-crypto'
 import { rooms_Schema } from '../Models/rooms_Schema'
 
+export const roomsController = express.Router();
 const roomsConnection = mongoose.createConnection('mongodb://localhost:27017/hotel')
 const roomsModel = roomsConnection.model('Room', rooms_Schema)
 
+/*
+Rooms
+  - `GET /rooms`–list all rooms. Accessible for roles `manager`, `clerk`, and `guest`. It should be possible to filter based on availability
+  - `GET /rooms/{:uid}`–view room details. Accessible for roles `manager`, `clerk`, amd `guest`
+  - `POST /rooms/{:uid}`–create room. Accessible for roles `manager`
+  - `PATCH /rooms/{:uid}`–modify room. Accessible for roles `manager`, `clerk`
+  - `DELETE /rooms/{:uid}`–delete room. Accessible for roles `manager`;
+*/
 
+const read = async (req: Request, res: Response) => {
+  let result = await roomsModel.find({}, { __v: 0}).lean().exec()
+  res.json(result)
+}
 
+const create =  async (req: Request, res: Response) => {
+  let { id } = await new roomsModel(req.body).save()
+  res.json({ id })
+}
+/*JSON sample: {
+    "room_number": 101,
+    "price":1200,
+    "private_bathroom": true
+}*/
+
+// module.exports = roomsController;
+export const room ={
+  read,
+  create
+}
+
+/*
 export const create = async (req: Request, res: Response) => {
   const { email, password, name } = req.body
   if(await userExists(email)) {
@@ -80,4 +107,4 @@ const newUser = (email: string, name: Name) => new UserModel({
     hash: '',
     salt: ''
   }
-}) 
+}) */

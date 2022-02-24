@@ -9,7 +9,7 @@ export interface room
 }
 
 export const rooms_Schema = new Schema<room>({
-    "room_number": {type:String},
-    "price":{type:Number},
-    "private_bathroom":{type:Boolean}
+    "room_number": {type:Number, required: true },
+    "price":{type:Number, required: true },
+    "private_bathroom":{type:Boolean, required: true }
 })

@@ -1,15 +1,15 @@
 //Create new router object
 
 import { Router } from "express"
-import { RoomsController } from "../Controllers/roomsController";
+import { room } from "../Controllers/roomsController";
 
 const router = Router()
 
-router.get("",);
-router.post("/:uid",);
+router.get("",room.read);
+router.post("",room.create);
 router.get("/:uid",);
 router.patch("/:uid",);
 router.delete("/:uid",);
 
 
-export const RoomsRouter = router;
+export const roomsRouter = router;
