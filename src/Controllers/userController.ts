@@ -1,9 +1,9 @@
 // Derived from AU course "Advanced Backend" lecture 3 example
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
-import { compare, genSalt, hash } from 'bcrypt'
+import { genSalt, hash } from 'bcrypt'
 
-import { randomBytes, pbkdf2, SALT_LENGTH, DIGEST, ITERATIONS, KEY_LENGTH, ROUNDS } from '../utils/auth-crypto'
+import { ROUNDS } from '../utils/auth-crypto'
 import { Name, userSchema } from '../Models/User_Schema'
 import { getRole } from './authenticationController'
 
@@ -38,19 +38,6 @@ export const create_bcrypt = async (req: Request, res: Response) => {
   }
 }
 
-export const check_bcrypt = async (req: Request, res: Response) => {
-  const { email, password } = req.body
-  let user = await UserModel.findOne({ email }).exec()
-  if (user) {
-    if (await compare(password, user.password.hash)) {
-      res.json(user)
-    } else {
-      res.sendStatus(403)
-    }
-  } else {
-    res.sendStatus(400)
-  }
-}
 
 const userExists = (email: string) => UserModel.findOne({ email }).exec()
 
@@ -67,6 +54,5 @@ const newUser = (email: string, name: Name, role: string) => new UserModel({
 export const user = {
   getAllUsers,
   getOne,
-  create_bcrypt,
-  check_bcrypt
+  create_bcrypt
 }

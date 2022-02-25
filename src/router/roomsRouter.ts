@@ -9,5 +9,4 @@ router.get("/:uid", room.readOne);
 router.patch("/:uid", room.update);
 router.delete("/:uid", room.remove);
 
-
 export const roomsRouter = router;

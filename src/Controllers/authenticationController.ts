@@ -3,19 +3,13 @@ import { sign, verify } from 'jsonwebtoken'
 import { Request, Response } from 'express'
 import { readFile } from 'fs'
 import { join } from 'path'
-import { compare, genSalt, hash } from 'bcrypt'
+import { compare } from 'bcrypt'
 import { decode } from 'jsonwebtoken'
 
 
 import mongoose from 'mongoose'
 import { userSchema } from '../Models/User_Schema'
 
-/*Authentication
-- `GET /users`–list all user IDs
-- `GET /users/{:uid}`–view user data
-- `POST /user`–create user
-- `POST /login`–issue JWT token
-*/
 
 const PATH_PRIVATE_KEY = join(__dirname, '..', '..', 'auth-rsa256.key')
 const PATH_PUBLIC_KEY = join(__dirname, '..', '..', 'public', 'auth-rsa256.key.pub')
@@ -25,6 +19,7 @@ const X5U = 'http://localhost:3000/auth-rsa256.key.pub'
 const usersConnection = mongoose.createConnection('mongodb://localhost:27017/hotel')
 const UserModel = usersConnection.model('User', userSchema)
 
+//login
 export const authenticate = async (req: Request, res: Response) => {
   const { email, password } = req.body
   let user = await UserModel.findOne({ email }).exec()
@@ -64,7 +59,7 @@ export const getRole = (req: Request) => {
   const jwt = decode(token!, { json: true })
   return jwt?.role
 }
-
+//check json token
 export const check = (req: Request, res: Response, next: any) => {
   const token = req.get('authorization')?.split(' ')[1]
   if (token == undefined) { return res.status(400).send("No jwt found"); }

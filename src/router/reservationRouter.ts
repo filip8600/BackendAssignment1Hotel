@@ -9,5 +9,4 @@ router.get("/:uid", reservation.readOne);
 router.patch("/:uid", reservation.update);
 router.delete("/:uid", reservation.remove);
 
-
 export const reservationsRouter = router;

@@ -1,10 +1,10 @@
 import { Router, json } from 'express'
 import { authenticate, check } from '../Controllers/authenticationController'
 
-const router = Router()
-router.use(json())
+const AuthenticationRouter = Router()
+AuthenticationRouter.use(json())
 
-router.post('', authenticate)
-router.post('/verify', check)
+AuthenticationRouter.post('', authenticate)
+AuthenticationRouter.post('/verify', check)
 
-export { router as AuthenticationRouter }
+export { AuthenticationRouter }
