@@ -2,6 +2,8 @@ const express = require('express')
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { rooms_Schema } from '../Models/rooms_Schema'
+import {getRole} from "./authenticationController"
+
 
 export const roomsController = express.Router();
 const roomsConnection = mongoose.createConnection('mongodb://localhost:27017/hotel')
@@ -22,8 +24,11 @@ const read = async (req: Request, res: Response) => {
 }
 
 const create =  async (req: Request, res: Response) => {
+  if(getRole(req)!=='kurt') { return res.status(400).send("Not correct Role")}
+
   let { id } = await new roomsModel(req.body).save()
   res.json({ id })
+
 }
 /*JSON sample: {
     "room_number": 101,

@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import { readFile } from 'fs'
 import { join } from 'path'
 import { compare, genSalt, hash } from 'bcrypt'
+import { decode } from 'jsonwebtoken'
 
 
 import mongoose from 'mongoose'
@@ -33,8 +34,8 @@ export const authenticate = async (req: Request, res: Response) => {
         if(err) {
           res.sendStatus(500)
         } else {
-          const isManager=user.role.includes('manager')
-          sign({ email, admin: isManager }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U} }, (err, token) => {
+         // const isManager=user.role.includes('manager')
+          sign({ email, role: user.role }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U} }, (err, token) => {
             if(err) {
               res.status(500).json({
                 message: err.message
@@ -53,21 +54,30 @@ export const authenticate = async (req: Request, res: Response) => {
   }
 }
 
-export const check = (req: Request, res: Response) => {
-  const { token } = req.body
+export const getRole= (req:Request) =>{
+  const token = req.get('authorization')?.split(' ')[1]
+  const jwt = decode(token!, { json: true })
+  return jwt?.role
+}
+
+export const check = (req: Request, res: Response, next:any) => {
+  const token = req.get('authorization')?.split(' ')[1]
+  if(token==undefined) {return res.status(400).send("No jwt found");}
   readFile(PATH_PUBLIC_KEY, (err, publicKey) => {
     if(err) {
       res.sendStatus(500)
-    } else {
-      verify(token, publicKey, { complete: true }, (err, decoded) => {
+  	} else {
+      verify(token , publicKey, { complete: true }, (err, decoded) => {
           if(err) {
             res.status(400).json({
               message: err.message
             })
           } else {
-            res.json(decoded)
+            next()
           }
         })
       }
-    })
+    })	
+	
+  
 }

@@ -6,6 +6,9 @@ import fs from 'fs';
 import path from 'path';
 import {roomsRouter} from "./router/roomsRouter"
 import {userRouter} from "./router/userRouter"
+import {authenticate, check} from "./Controllers/authenticationController"
+import { sign, verify } from 'jsonwebtoken'
+
 
 
 //var RoomsRouter = require('./router/roomsRouter');
@@ -30,6 +33,12 @@ app.get('/hello', (req: any, res: any) => {
 
 //Rooms router 
  app.use("", userRouter)
+
+ //Authenticate:
+ app.use((req:any, res:any, next:any) => {
+  check(req,res,next);
+})
+
 // app.use("/authentication")
 app.use("/rooms",roomsRouter)
 
