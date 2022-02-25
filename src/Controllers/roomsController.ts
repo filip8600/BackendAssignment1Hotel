@@ -1,3 +1,4 @@
+//CRUD operations Derived from AU course Advanced Backend lecture 2
 const express = require('express')
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
@@ -24,8 +25,8 @@ const read = async (req: Request, res: Response) => {
 }
 
 const create =  async (req: Request, res: Response) => {
-  if(getRole(req)!=='kurt') { return res.status(400).send("Not correct Role")}
-
+  if(getRole(req)!=='manager') { return res.status(400).send("Not correct Role")}
+//TODO sorter (filter)
   let { id } = await new roomsModel(req.body).save()
   res.json({ id })
 
@@ -35,81 +36,47 @@ const create =  async (req: Request, res: Response) => {
     "price":1200,
     "private_bathroom": true
 }*/
+const readOne = async (req: Request, res: Response) => {
+  const { uid } = req.params
+  let result = await roomsModel.find({ _id: uid }, { __v: 0}).exec()
+  res.json(result)
+}
 
-// module.exports = roomsController;
+
+const overwrite = async (req: Request, res:Response) => {
+  if(getRole(req)!=='manager'&&getRole(req)!=='clerk') { return res.status(400).send("Not correct Role")}
+  const { uid } = req.params
+  const body = req.body
+  let result = await roomsModel.findOne({ _id: uid}, {__v: 0}).exec()
+  if(result) {
+    let resp:any = result.overwrite(body)
+    let replacedResult = await roomsModel.replaceOne({ _id: uid }, resp).exec();
+    res.json(replacedResult)
+  } else {
+    res.sendStatus(404)
+  }
+}
+
+const update = async (req: Request, res: Response) => {
+  if(getRole(req)!=='manager'&&getRole(req)!=='clerk') { return res.status(400).send("Not correct Role")}
+
+  const { uid } = req.params
+  const body = req.body
+  let result = await roomsModel.updateOne({_id: uid }, { $set: body }).exec()
+  res.json({uid, result})
+}
+
+const remove = async (req: Request, res: Response) => {
+if(getRole(req)!=='manager') { return res.status(400).send("Not correct Role")}
+const { uid } = req.params
+  let result = await roomsModel.deleteOne({ _id: uid })
+  res.json(result)
+}
 export const room ={
   read,
-  create
+  readOne,
+  create,
+  overwrite,
+  update,
+  remove
 }
-
-/*
-export const create = async (req: Request, res: Response) => {
-  const { email, password, name } = req.body
-  if(await userExists(email)) {
-    res.status(400).json({
-      "message": "User already exists"
-    });
-  } else {
-    let salt = await randomBytes(SALT_LENGTH);
-    let hashed = await pbkdf2(password, salt.toString('hex'), ITERATIONS, KEY_LENGTH, DIGEST)
-    let user = newUser(email, name);
-    user.password.setPassword(hashed.toString('hex'), salt.toString('hex'))
-    await user.save()
-    res.json(user)
-  }
-}
-
-export const create_bcrypt =  async (req: Request, res: Response) => {
-  const { email, password, name } = req.body;
-  if(await userExists(email)) {
-    res.status(400).json({
-      "message": "User already exists"
-    });
-  } else {
-    const salt = await genSalt(ROUNDS)
-    const hashed = await hash(password, salt)
-    let user = newUser(email, name);
-    user.password.setPassword(hashed, salt)
-    await user.save()
-    res.json(user)
-  }
-}
-
-export const check = async (req: Request, res: Response) => {
-  const { email, password } = req.body
-  let user = await UserModel.findOne({ email }).exec()
-  if(user) {
-    if(await user.password.isPasswordValid(password)) {
-      res.json(user)
-    } else {
-      res.sendStatus(403)
-    }
-  } else {
-    res.sendStatus(400)
-  }
-}
-
-export const check_bcrypt = async (req: Request, res: Response) => {
-  const { email, password } = req.body
-  let user = await UserModel.findOne({ email }).exec()
-  if(user) {
-    if(await compare(password, user.password.hash)) {
-      res.json(user)
-    } else {
-      res.sendStatus(403)
-    }
-  } else {
-    res.sendStatus(400)
-  }
-}
-
-const userExists = (email: string) => UserModel.findOne({ email }).exec()
-
-const newUser = (email: string, name: Name) => new UserModel({ 
-  email, 
-  name, 
-  password: {
-    hash: '',
-    salt: ''
-  }
-}) */

@@ -34,7 +34,6 @@ export const authenticate = async (req: Request, res: Response) => {
         if(err) {
           res.sendStatus(500)
         } else {
-         // const isManager=user.role.includes('manager')
           sign({ email, role: user.role }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U} }, (err, token) => {
             if(err) {
               res.status(500).json({
@@ -52,6 +51,12 @@ export const authenticate = async (req: Request, res: Response) => {
   } else {
     res.sendStatus(400)
   }
+}
+
+export const getEmail= (req:Request) =>{
+  const token = req.get('authorization')?.split(' ')[1]
+  const jwt = decode(token!, { json: true })
+  return jwt?.email
 }
 
 export const getRole= (req:Request) =>{

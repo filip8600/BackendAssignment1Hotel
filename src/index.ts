@@ -5,9 +5,11 @@ import helmet from 'helmet';
 import fs from 'fs';
 import path from 'path';
 import {roomsRouter} from "./router/roomsRouter"
+import {reservationsRouter} from "./router/reservationRouter"
 import {userRouter} from "./router/userRouter"
-import {authenticate, check} from "./Controllers/authenticationController"
-import { sign, verify } from 'jsonwebtoken'
+import {secureUserRouter} from "./router/secureUserRouter"
+import { check} from "./Controllers/authenticationController"
+import { NextFunction } from 'express';
 
 
 
@@ -24,22 +26,17 @@ const options =  {
 };
 app.use(helmet());
 
-//DUMMY ENDPOINT - DELETE LATER
-app.get('/hello', (req: any, res: any) => {
-  res.send('Hello World!')
-})
-
-
-
 //Rooms router 
- app.use("", userRouter)
+ app.use("", userRouter) //Not authenticated
 
- //Authenticate:
- app.use((req:any, res:any, next:any) => {
+ //Very important Authenticate middleware:
+ app.use((req:any, res:any, next:NextFunction) => {
   check(req,res,next);
 })
 
-// app.use("/authentication")
+app.use("", secureUserRouter) //get all users
+
+app.use("/reservations",reservationsRouter)
 app.use("/rooms",roomsRouter)
 
 https.createServer(options, app).listen(port, () => {

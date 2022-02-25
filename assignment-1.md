@@ -4,35 +4,35 @@ Implement an API for a hotel management system.
 
 ### API specification
 Authentication
-  - `GET /users`–list all user IDs
-  - `GET /users/{:uid}`–view user data
-  - `POST /user`–create user
-  - `POST /login`–issue JWT token
+  - ✅ `GET /users`–list all user IDs
+  - ✅ `GET /users/{:uid}`–view user data
+  - ✅ `POST /user`–create user
+  - ✅ `POST /login`–issue JWT token
 
 Rooms
-  - `GET /rooms`–list all rooms. Accessible for roles `manager`, `clerk`, and `guest`. It should be possible to filter based on availability
-  - `GET /rooms/{:uid}`–view room details. Accessible for roles `manager`, `clerk`, amd `guest`
-  - `POST /rooms/{:uid}`–create room. Accessible for roles `manager`
-  - `PATCH /rooms/{:uid}`–modify room. Accessible for roles `manager`, `clerk`
-  - `DELETE /rooms/{:uid}`–delete room. Accessible for roles `manager`
+  - ❌ `GET /rooms`–list all rooms. Accessible for roles `manager`, `clerk`, and `guest`. It should be possible to filter based on availability
+  - ✅ `GET /rooms/{:uid}`–view room details. Accessible for roles `manager`, `clerk`, amd `guest`
+  - ✅ `POST /rooms/{:uid}`–create room. Accessible for roles `manager`
+  - ✅ `PATCH /rooms/{:uid}`–modify room. Accessible for roles `manager`, `clerk`
+  - ✅ `DELETE /rooms/{:uid}`–delete room. Accessible for roles `manager`
 
 Reservations
-  - `GET /reservations`–list all reservation. Accessible for roles `manager` and `clerk`. It should be possible to filter based dates (from, to and from-to)
-  - `GET /reservations/{:uid}`-view reservation details. Accessible for roles `manager`, `clerk`, and `guest` (if created by `guest`)
-  - `POST /reservations/{:uid}`–create reservation. Accessible for roles `manager`, `clerk`, and `guest` 
-  - `PATCH /reservations/{:uid}`—modify reservation. Accessible for roles `manager`, `clerk`, and `guest` (if created by `guest`) 
-  - `DELETE /reservations/{:uid}`–delete reservation. Accessible for roles `manager`, `clerk`
+  - ✅ `GET /reservations`–list all reservation. Accessible for roles `manager` and `clerk`. It should be possible to filter based dates (from, to and from-to)
+  - ✅ `GET /reservations/{:uid}`-view reservation details. Accessible for roles `manager`, `clerk`, and `guest` (if created by `guest`)
+  - ✅ `POST /reservations/{:uid}`–create reservation. Accessible for roles `manager`, `clerk`, and `guest` 
+  - ✅ `PATCH /reservations/{:uid}`—modify reservation. Accessible for roles `manager`, `clerk`, and `guest` (if created by `guest`) 
+  - ✅ `DELETE /reservations/{:uid}`–delete reservation. Accessible for roles `manager`, `clerk`
 
 ### Requirements
 The system must fulfill the following functional requirements:
-  - `R1` A room can only be reserved once within a given time period
-  - `R2` The must be implemented using Node.js
-  - `R3` All reservations, users, and reservations must be persisted in a MongoDB
-  - `R4` An asymmetric algorithm must be used to sign tokens
-  - `R5` All endpoints must verify received tokens to ensure it has not been tampered with
-  - `R6` A user shall have an email associated with their account
-  - `R7` User emails should be system-wide unique
-  - `R8` All sensitive information shall not be persisted as plaintext
+  - ❌ `R1` A room can only be reserved once within a given time period
+  - ✅ `R2` The must be implemented using Node.js
+  - ✅ `R3` All reservations, users, and reservations must be persisted in a MongoDB
+  - ❌ `R4` An asymmetric algorithm must be used to sign tokens
+  - ✅ `R5` All endpoints must verify received tokens to ensure it has not been tampered with
+  - ❌ `R6` A user shall have an email associated with their account
+  - ✅ `R7` User emails should be system-wide unique
+  - ✅ `R8` All sensitive information shall not be persisted as plaintext
 
 ## Submission
 Before submitting your solution, do the following:

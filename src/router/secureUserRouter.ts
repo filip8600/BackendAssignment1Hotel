@@ -4,8 +4,9 @@ import { authenticate } from '../Controllers/authenticationController'
 
 const router = Router()
 
-//router.get("/users", user.getAllUsers); //Moved to secure router
-router.post('/user', user.create_bcrypt);
-router.post('/login', authenticate);
+router.get("/users", user.getAllUsers); 
+router.get("/users/:uid", user.getOne); 
 
-export const userRouter = router
+
+
+export const secureUserRouter = router
