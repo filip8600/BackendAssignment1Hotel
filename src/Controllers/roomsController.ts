@@ -3,7 +3,7 @@ const express = require('express')
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { rooms_Schema } from '../Models/rooms_Schema'
-import {getRole} from "./authenticationController"
+import { getRole } from "./authenticationController"
 
 
 export const roomsController = express.Router();
@@ -20,13 +20,13 @@ Rooms
 */
 
 const read = async (req: Request, res: Response) => {
-  let result = await roomsModel.find({}, { __v: 0}).lean().exec()
+  let result = await roomsModel.find({}, { __v: 0 }).lean().exec()
   res.json(result)
 }
 
-const create =  async (req: Request, res: Response) => {
-  if(getRole(req)!=='manager') { return res.status(400).send("Not correct Role")}
-//TODO sorter (filter)
+const create = async (req: Request, res: Response) => {
+  if (getRole(req) !== 'manager') { return res.status(400).send("Not correct Role") }
+  //TODO sorter (filter)
   let { id } = await new roomsModel(req.body).save()
   res.json({ id })
 
@@ -38,18 +38,18 @@ const create =  async (req: Request, res: Response) => {
 }*/
 const readOne = async (req: Request, res: Response) => {
   const { uid } = req.params
-  let result = await roomsModel.find({ _id: uid }, { __v: 0}).exec()
+  let result = await roomsModel.find({ _id: uid }, { __v: 0 }).exec()
   res.json(result)
 }
 
 
-const overwrite = async (req: Request, res:Response) => {
-  if(getRole(req)!=='manager'&&getRole(req)!=='clerk') { return res.status(400).send("Not correct Role")}
+const overwrite = async (req: Request, res: Response) => {
+  if (getRole(req) !== 'manager' && getRole(req) !== 'clerk') { return res.status(400).send("Not correct Role") }
   const { uid } = req.params
   const body = req.body
-  let result = await roomsModel.findOne({ _id: uid}, {__v: 0}).exec()
-  if(result) {
-    let resp:any = result.overwrite(body)
+  let result = await roomsModel.findOne({ _id: uid }, { __v: 0 }).exec()
+  if (result) {
+    let resp: any = result.overwrite(body)
     let replacedResult = await roomsModel.replaceOne({ _id: uid }, resp).exec();
     res.json(replacedResult)
   } else {
@@ -58,21 +58,21 @@ const overwrite = async (req: Request, res:Response) => {
 }
 
 const update = async (req: Request, res: Response) => {
-  if(getRole(req)!=='manager'&&getRole(req)!=='clerk') { return res.status(400).send("Not correct Role")}
+  if (getRole(req) !== 'manager' && getRole(req) !== 'clerk') { return res.status(400).send("Not correct Role") }
 
   const { uid } = req.params
   const body = req.body
-  let result = await roomsModel.updateOne({_id: uid }, { $set: body }).exec()
-  res.json({uid, result})
+  let result = await roomsModel.updateOne({ _id: uid }, { $set: body }).exec()
+  res.json({ uid, result })
 }
 
 const remove = async (req: Request, res: Response) => {
-if(getRole(req)!=='manager') { return res.status(400).send("Not correct Role")}
-const { uid } = req.params
+  if (getRole(req) !== 'manager') { return res.status(400).send("Not correct Role") }
+  const { uid } = req.params
   let result = await roomsModel.deleteOne({ _id: uid })
   res.json(result)
 }
-export const room ={
+export const room = {
   read,
   readOne,
   create,

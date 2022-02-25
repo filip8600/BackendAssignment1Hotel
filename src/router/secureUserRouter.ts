@@ -4,8 +4,8 @@ import { authenticate } from '../Controllers/authenticationController'
 
 const router = Router()
 
-router.get("/users", user.getAllUsers); 
-router.get("/users/:uid", user.getOne); 
+router.get("/users", user.getAllUsers);
+router.get("/users/:uid", user.getOne);
 
 
 

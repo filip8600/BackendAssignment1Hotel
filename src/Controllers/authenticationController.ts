@@ -28,14 +28,14 @@ const UserModel = usersConnection.model('User', userSchema)
 export const authenticate = async (req: Request, res: Response) => {
   const { email, password } = req.body
   let user = await UserModel.findOne({ email }).exec()
-  if(user) {
-    if(await compare(password,user.password.hash)) {
+  if (user) {
+    if (await compare(password, user.password.hash)) {
       readFile(PATH_PRIVATE_KEY, (err, privateKey) => {
-        if(err) {
+        if (err) {
           res.sendStatus(500)
         } else {
-          sign({ email, role: user.role }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U} }, (err, token) => {
-            if(err) {
+          sign({ email, role: user.role }, privateKey, { expiresIn: '1h', header: { alg: 'RS256', x5u: X5U } }, (err, token) => {
+            if (err) {
               res.status(500).json({
                 message: err.message
               })
@@ -53,36 +53,36 @@ export const authenticate = async (req: Request, res: Response) => {
   }
 }
 
-export const getEmail= (req:Request) =>{
+export const getEmail = (req: Request) => {
   const token = req.get('authorization')?.split(' ')[1]
   const jwt = decode(token!, { json: true })
   return jwt?.email
 }
 
-export const getRole= (req:Request) =>{
+export const getRole = (req: Request) => {
   const token = req.get('authorization')?.split(' ')[1]
   const jwt = decode(token!, { json: true })
   return jwt?.role
 }
 
-export const check = (req: Request, res: Response, next:any) => {
+export const check = (req: Request, res: Response, next: any) => {
   const token = req.get('authorization')?.split(' ')[1]
-  if(token==undefined) {return res.status(400).send("No jwt found");}
+  if (token == undefined) { return res.status(400).send("No jwt found"); }
   readFile(PATH_PUBLIC_KEY, (err, publicKey) => {
-    if(err) {
+    if (err) {
       res.sendStatus(500)
-  	} else {
-      verify(token , publicKey, { complete: true }, (err, decoded) => {
-          if(err) {
-            res.status(400).json({
-              message: err.message
-            })
-          } else {
-            next()
-          }
-        })
-      }
-    })	
-	
-  
+    } else {
+      verify(token, publicKey, { complete: true }, (err, decoded) => {
+        if (err) {
+          res.status(400).json({
+            message: err.message
+          })
+        } else {
+          next()
+        }
+      })
+    }
+  })
+
+
 }
