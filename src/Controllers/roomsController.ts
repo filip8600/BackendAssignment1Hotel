@@ -3,6 +3,7 @@ const express = require('express')
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { rooms_Schema } from '../Models/rooms_Schema'
+import { ireservation, reservations_Schema } from '../Models/reservation_Schema'
 import { getRole } from "./authenticationController"
 
 
@@ -20,13 +21,24 @@ Rooms
 */
 
 const read = async (req: Request, res: Response) => {
-  let result = await roomsModel.find({}, { __v: 0 }).lean().exec()
+  let onlyAvailable = req.query.onlyAvailable
+  let roomFilter = {}
+  if (onlyAvailable !== "0") {//Sort out currently occupied rooms
+    const reservationModel = roomsConnection.model('Reservation', reservations_Schema)
+    let reservationFilter = {
+      reservationEnd: { $gte: new Date(Date.now()) },
+      reservationStart: { $lte: new Date(Date.now()) }
+    }
+    let reservations: ireservation[] = await reservationModel.find(reservationFilter).lean().exec()
+    let occupiedRooms = reservations.map(x => x.room_number)
+    roomFilter = { room_number: { $nin: occupiedRooms } }//https://docs.mongodb.com/manual/reference/operator/query/nin/
+  }
+  let result = await roomsModel.find(roomFilter, { __v: 0 }).lean().exec()
   res.json(result)
 }
 
 const create = async (req: Request, res: Response) => {
   if (getRole(req) !== 'manager') { return res.status(400).send("Not correct Role") }
-  //TODO sorter (filter)
   let { id } = await new roomsModel(req.body).save()
   res.json({ id })
 

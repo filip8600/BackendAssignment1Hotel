@@ -16,27 +16,27 @@ Reservations
   - `GET /reservations/{:uid}`-view reservation details. Accessible for roles `manager`, `clerk`, and `guest` (if created by `guest`)
   - `POST /reservations/{:uid}`–create reservation. Accessible for roles `manager`, `clerk`, and `guest` 
   - `PATCH /reservations/{:uid}`—modify reservation. Accessible for roles `manager`, `clerk`, and `guest` (if created by `guest`) 
-  - `DELETE /reservations/{:uid}`–delete reservation. Accessible for roles `manager`, `clerk`
+  - `DELETE /reservations/{:uid}`–delete reservation. Accessible for roles `manager`, `clerk` */
 
-*/
-//https://localhost:3001/reservations?from=20221010?to=20221111
+//example: https://localhost:3001/reservations?from=20221010&to=20221111
 const read = async (req: Request, res: Response) => {
     if (getRole(req) !== 'manager' && getRole(req) !== 'clerk') { return res.status(400).send("Not correct Role") }
     //Build filter
     let filter = {}
     let start = req.query.from //https://stackoverflow.com/a/17008027
+
     if (start) {
         let startDate = new Date(start.toString())
-        filter = { reservationStart: { $gt: startDate } }//Virker IKKE
+        filter = { ...filter, reservationStart: { $gt: startDate } }
     }
 
     let end = req.query.to
     if (end) {
         let endDate = new Date(end.toString())
-        filter = { ...filter, reservationEnd: { $lt: endDate } }//Virker IKKE
+        filter = { ...filter, reservationEnd: { $lt: endDate } }
     }
     //Perform querry:
-    let result = await reservationsModel.find({ filter }, { __v: 0 }).sort('reservationStart').lean().exec()
+    let result = await reservationsModel.find(filter, { __v: 0 }).sort('reservationStart').lean().exec()
     //return res.json(filter)
 
     res.json(result)
@@ -48,7 +48,7 @@ const create = async (req: Request, res: Response) => {
         reservationEnd: { $gt: req.body.reservationStart },
         reservationStart: { $lt: req.body.reservationEnd }
     }
-
+    //Check for conflicts with other reservations for the same room nd time
     let conflicts = await reservationsModel.find(filters).lean().exec()
     if (conflicts.length < 1) {
         let { id } = await new reservationsModel(req.body).save()

@@ -10,7 +10,7 @@ Authentication
   - ✅ `POST /login`–issue JWT token
 
 Rooms
-  - ❌ `GET /rooms`–list all rooms. Accessible for roles `manager`, `clerk`, and `guest`. It should be possible to filter based on availability
+  - ✅ `GET /rooms`–list all rooms. Accessible for roles `manager`, `clerk`, and `guest`. It should be possible to filter based on availability
   - ✅ `GET /rooms/{:uid}`–view room details. Accessible for roles `manager`, `clerk`, amd `guest`
   - ✅ `POST /rooms/{:uid}`–create room. Accessible for roles `manager`
   - ✅ `PATCH /rooms/{:uid}`–modify room. Accessible for roles `manager`, `clerk`
@@ -25,12 +25,12 @@ Reservations
 
 ### Requirements
 The system must fulfill the following functional requirements:
-  - ❌ `R1` A room can only be reserved once within a given time period
+  - ✅ `R1` A room can only be reserved once within a given time period
   - ✅ `R2` The must be implemented using Node.js
   - ✅ `R3` All reservations, users, and reservations must be persisted in a MongoDB
-  - ❌ `R4` An asymmetric algorithm must be used to sign tokens
+  - ✅ `R4` An asymmetric algorithm must be used to sign tokens `we are using RS256`
   - ✅ `R5` All endpoints must verify received tokens to ensure it has not been tampered with
-  - ❌ `R6` A user shall have an email associated with their account
+  - ✅ `R6` A user shall have an email associated with their account
   - ✅ `R7` User emails should be system-wide unique
   - ✅ `R8` All sensitive information shall not be persisted as plaintext
 
