@@ -24,7 +24,6 @@ const read = async (req: Request, res: Response) => {
     //Build filter
     let filter = {}
     let start = req.query.from //https://stackoverflow.com/a/17008027
-
     if (start) {
         let startDate = new Date(start.toString())
         filter = { ...filter, reservationStart: { $gt: startDate } }

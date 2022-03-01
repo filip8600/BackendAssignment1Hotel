@@ -36,11 +36,11 @@ The system must fulfill the following functional requirements:
 
 ## Submission
 Before submitting your solution, do the following:
-1. Delete the `node_modules` folder in the workspace root folder
-2. Add a file `participants.txt` and insert a new line for each participant with the AUID and full name of each member separated by a whitespace
-3. Add `participants.txt` to the root folder of your application
-4. Archive and compress the folder using one the following formats: `zip`, or `gzip/tar`. All other formats (`rar`, `7z`, etc.) will result in a request for resubmission
-5. The filename should be named `<AUID_PARTICIPANT_1>-<AUID_PARTICIPANT_2>-<AUID_PARTICIPANT_3>.<ARCHIVE_COMPRESS_FORMAT>` _Example: Alice Alison with AUID `au01248` and Bob Bobson with AUID `au84210` creates a compressed archive named `au01248-au84210.tar.gz` and uploads that to Brightspace_
+1. ❌ Delete the `node_modules` folder in the workspace root folder
+2. ❌ Add a file `participants.txt` and insert a new line for each participant with the AUID and full name of each member separated by a whitespace
+3. ❌ Add `participants.txt` to the root folder of your application
+4. ❌ Archive and compress the folder using one the following formats: `zip`, or `gzip/tar`. All other formats (`rar`, `7z`, etc.) will result in a request for resubmission
+5. ❌ The filename should be named `<AUID_PARTICIPANT_1>-<AUID_PARTICIPANT_2>-<AUID_PARTICIPANT_3>.<ARCHIVE_COMPRESS_FORMAT>` _Example: Alice Alison with AUID `au01248` and Bob Bobson with AUID `au84210` creates a compressed archive named `au01248-au84210.tar.gz` and uploads that to Brightspace_
 
 A `participants.txt` example:
 ```
