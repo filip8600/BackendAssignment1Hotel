@@ -22,21 +22,20 @@ const options = {
 };
 app.use(helmet());
 
-//Rooms router 
+
 app.use("", userRouter) //Not authenticated
 
 //Very important Authenticate middleware:
 app.use((req: any, res: any, next: NextFunction) => {
   check(req, res, next);
 })
-
+//Calls to Routers below are authenticated:
 app.use("", secureUserRouter) //get all users
-
 app.use("/reservations", reservationsRouter)
 app.use("/rooms", roomsRouter)
 
 https.createServer(options, app).listen(port, () => {
-  console.log(`Running 'secure-http' on ${port}`);
+  console.log(`Running 'secure-http' on https://localhost:${port}`);
 });
 
 

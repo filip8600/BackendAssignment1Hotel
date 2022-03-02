@@ -53,7 +53,8 @@ const create = async (req: Request, res: Response) => {
         let { id } = await new reservationsModel(req.body).save()
         res.json(id)
     }
-    else (res.status(400).json(conflicts))
+    else (res.status(400).json("Booking not allowed - The room is probably already booked at this time 😔"))
+    //todo: calculate price
 }
 
 const readOne = async (req: Request, res: Response) => {

@@ -20,10 +20,11 @@ Rooms
   - `DELETE /rooms/{:uid}`–delete room. Accessible for roles `manager`;
 */
 
+//https://localhost:3001/rooms?onlyAvailable=0
 const read = async (req: Request, res: Response) => {
   let onlyAvailable = req.query.onlyAvailable
   let roomFilter = {}
-  if (onlyAvailable !== "0") {//Sort out currently occupied rooms
+  if (onlyAvailable === "1") {//Sort out currently occupied rooms
     const reservationModel = roomsConnection.model('Reservation', reservations_Schema)
     let reservationFilter = {
       reservationEnd: { $gte: new Date(Date.now()) },
