@@ -20,7 +20,8 @@ Rooms
   - `DELETE /rooms/{:uid}`–delete room. Accessible for roles `manager`;
 */
 
-//https://localhost:3001/rooms?onlyAvailable=0
+//https://localhost:3001/rooms?onlyAvailable=1 will return available (right now) rooms
+//https://localhost:3001/rooms returns all rooms 🛏️
 const read = async (req: Request, res: Response) => {
   let onlyAvailable = req.query.onlyAvailable
   let roomFilter = {}
